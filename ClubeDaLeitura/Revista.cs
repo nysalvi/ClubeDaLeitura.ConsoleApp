@@ -19,7 +19,7 @@ namespace ClubeDaLeitura
             this.ano = ano;
             this.caixa = caixa;
             this.id = id;
-        }
+        } 
         public string[] ToString()
         {
             return new string[]{id.ToString(), tipoColecao, edicao.ToString(), ano.ToString(),
