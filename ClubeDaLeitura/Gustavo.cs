@@ -25,35 +25,7 @@ namespace ClubeDaLeitura
             amigoMenu = new AmigoMenu();
             caixaMenu = new CaixaMenu();
             revistaMenu = new RevistaMenu(caixaMenu);
-            emprestimoMenu = new EmprestimoMenu(amigoMenu, revistaMenu);
-        }
-        public List<Emprestimo> VerificaMes(DateTime mes)
-        {
-            if (mes < inicio)
-                return null;
-            else 
-            {
-                List<Emprestimo> empresta = new List<Emprestimo>();
-                emprestimoMenu.emprestimos.ForEach(e => { 
-                    if ((e.GetEmprestimo().Month, e.GetEmprestimo().Year) == (mes.Month, mes.Year))
-                        empresta.Add(e);                                            
-                });
-                return empresta;
-            }
-        }
-        public List<Emprestimo> VerificaDia(DateTime dia)
-        {
-            if (dia < inicio)
-                return null;
-            else
-            {
-                List<Emprestimo> empresta = new List<Emprestimo>();
-                emprestimoMenu.emprestimos.ForEach(e => {
-                    if (e.GetEmprestimo() == dia && e.emAberto())
-                        empresta.Add(e);
-                });
-                return empresta;
-            }
+            emprestimoMenu = new EmprestimoMenu(amigoMenu, revistaMenu, inicio);
         }
         public void Menu()
         {

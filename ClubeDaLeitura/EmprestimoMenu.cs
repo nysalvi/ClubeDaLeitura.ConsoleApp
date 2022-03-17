@@ -12,10 +12,12 @@ namespace ClubeDaLeitura
         AmigoMenu amigos;
         RevistaMenu revistas;
         int id = 0;
-        public EmprestimoMenu(AmigoMenu amigos, RevistaMenu revistas)
+        DateTime inicio;
+        public EmprestimoMenu(AmigoMenu amigos, RevistaMenu revistas, DateTime inicio)
         {
             this.amigos = amigos;
             this.revistas = revistas;
+            this.inicio = inicio;
             this.emprestimos = new List<Emprestimo>();
         }
         public bool Menu(){
@@ -26,6 +28,8 @@ namespace ClubeDaLeitura
             Console.WriteLine("\tDigite 2 - Para Editar Um Emprestimo");
             Console.WriteLine("\tDigite 3 - Para Excluir Um Emprestimo");
             Console.WriteLine("\tDigite 4 - Para Visualizar Um Emprestimo");
+            Console.WriteLine("\tDigite 5 - Para Verificar Os Emprestimos Criados no Mês");
+            Console.WriteLine("\tDigite 6 - Para Verificar Os Emprestimos Em Aberto Em Um Dia");
             Console.WriteLine("\tDigite quit - Para Sair");
             opcao = Console.ReadLine();
             if (opcao == "quit")
@@ -39,6 +43,10 @@ namespace ClubeDaLeitura
                 ExcluirEmprestimo();
             else if (numero == 4)
                 VisualizarEmprestimo();
+            else if (numero == 5)
+                VerificaMes();
+            else if (numero == 6)
+                VerificaDia();
             Console.ReadLine();
             Console.Clear();
             return true;
@@ -83,6 +91,48 @@ namespace ClubeDaLeitura
         {
             emprestimos.ForEach(x => { Console.WriteLine("\t ID {0} - Amigo : {1} | Revista : {2}" +
                 " | Data Empréstimo : {3} | Devolução : {4}", x.ToString());});
+        }
+        public void VerificaMes()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            DateTime mes;
+            Console.WriteLine("Digite o mês que deseja verificar : ");
+            DateTime.TryParse(Console.ReadLine(), out mes);
+
+            if (mes < inicio)
+                return;
+            else
+            {
+                List<Emprestimo> empresta = new List<Emprestimo>();
+                emprestimos.ForEach(e => {
+                    if ((e.GetEmprestimo().Month, e.GetEmprestimo().Year) == (mes.Month, mes.Year))
+                        empresta.Add(e);
+                });
+                empresta.ForEach(x => {
+                    Console.WriteLine("\t ID {0} - Amigo : {1} | Revista : {2}" +
+                        " | Data Empréstimo : {3} | Devolução : {4}", x.ToString());
+                });
+            }
+        }
+        public void VerificaDia()
+        {
+            DateTime dia;
+            Console.WriteLine("Digite o dia que deseja verificar : ");
+            DateTime.TryParse(Console.ReadLine(), out dia);
+            if (dia < inicio)
+                return;
+            else
+            {
+                List<Emprestimo> empresta = new List<Emprestimo>();
+                emprestimos.ForEach(e => {
+                    if (e.GetEmprestimo() == dia && e.emAberto())
+                        empresta.Add(e);
+                });
+                empresta.ForEach(x => {
+                    Console.WriteLine("\t ID {0} - Amigo : {1} | Revista : {2}" +
+                        " | Data Empréstimo : {3} | Devolução : {4}", x.ToString());
+                });                
+            }
         }
     }
 }
