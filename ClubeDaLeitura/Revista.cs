@@ -18,7 +18,7 @@ namespace ClubeDaLeitura
             this.edicao = edicao;
             this.ano = ano;
             this.caixa = caixa;
-            this.id = id;
+            this.id = id; 
         } 
         public string[] ToString()
         {
