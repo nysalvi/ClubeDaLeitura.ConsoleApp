@@ -11,10 +11,12 @@ namespace ClubeDaLeitura
         public List<Revista> revistas;
         int id = 0;
         CaixaMenu caixas;
-        public RevistaMenu(CaixaMenu caixas)
+        CategoriaMenu categorias;
+        public RevistaMenu(CaixaMenu caixas, CategoriaMenu categorias)
         {
             this.revistas = new List<Revista>();
             this.caixas = caixas;
+            this.categorias = categorias;
         } 
         public bool Menu()
         {
@@ -27,6 +29,7 @@ namespace ClubeDaLeitura
             Console.WriteLine("\tDigite 4 - Para Visualizar as Revistas");
             Console.WriteLine("\tDigite quit - Para Sair");
             input = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             if (input == "quit")
                 return false;
             int.TryParse(input, out numero);
@@ -45,10 +48,9 @@ namespace ClubeDaLeitura
         }
         public bool AdicionarRevista()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
             Caixa caixa; string tipoColecao; int edicao, ano;
             string input;
-            int idCaixa;
+            int idCaixa, idCategoria;
             Console.WriteLine("Digite a ID da Caixa para Adicionar : ");
                 input = Console.ReadLine();
                 int.TryParse(input, out idCaixa);
@@ -60,9 +62,16 @@ namespace ClubeDaLeitura
             Console.WriteLine("Digite o Ano da Revista : ");
                 input = Console.ReadLine();
                 int.TryParse(input, out ano);
+            Console.WriteLine("Digite a ID da Categoria : ");
+                input = Console.ReadLine();
+                int.TryParse(input, out idCategoria);
+                
             caixa = caixas.GetCaixa(idCaixa);
             id++;
-            Revista re = new Revista(tipoColecao, edicao, ano, id, caixa);
+            Categoria categoria = categorias.GetCategoria(idCategoria);
+            if (categoria == null)
+                return false;
+            Revista re = new Revista(tipoColecao, edicao, ano, id, caixa, categoria);
             revistas.Add(re);
             return caixa.adicionarRevista(re);
         }
@@ -82,16 +91,14 @@ namespace ClubeDaLeitura
         }
         public Revista GetRevista(int idRevista)
         {
-            Revista revista = null;
             foreach (Revista r in revistas)
             {
                 if (r.id == idRevista)
                 {
-                    revista = r;
-                    break;
+                    return r;
                 }
             }
-            return revista;
+            return null;
         }
     }
 }

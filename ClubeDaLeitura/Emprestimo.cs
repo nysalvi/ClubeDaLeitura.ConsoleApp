@@ -26,9 +26,21 @@ namespace ClubeDaLeitura
         {
             return this.emprestimo;
         }   
-        public bool emAberto()
+        public bool EmAberto()
         {
             return status;
+        }
+        public Amigo GetAmigo()
+        {
+            return amigo;
+        }
+        public DateTime GetDevolucao()
+        {
+            return devolucao;
+        }
+        public void MudarStatus(bool status)
+        {
+            this.status = status;
         }
         public string[] ToString()
         {

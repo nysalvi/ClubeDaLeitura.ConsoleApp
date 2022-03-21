@@ -24,6 +24,7 @@ namespace ClubeDaLeitura
             Console.WriteLine("\tDigite 4 - Para Visualizar as Caixas");
             Console.WriteLine("\tDigite quit - Para Sair");
             opcao = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             int.TryParse(opcao, out numero);
             if (opcao == "quit")
                 return false;
@@ -41,7 +42,6 @@ namespace ClubeDaLeitura
         }
         public void AdicionarCaixa()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
             Caixa caixa; string cor, etiqueta; int numero;  
             string input;
             Console.WriteLine("Digite a Cor da Caixa: ");

@@ -22,8 +22,10 @@ namespace ClubeDaLeitura
             Console.WriteLine("\tDigite 2 - Para Editar Um Amigo");
             Console.WriteLine("\tDigite 3 - Para Excluir Um Amigo");
             Console.WriteLine("\tDigite 4 - Para Visualizar Um Amigo");
+            Console.WriteLine("\tDigite 5 - Para Quitar a Multa de Um Amigo");
             Console.WriteLine("\tDigite quit - Para Sair");
             input = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             if (input == "quit")
                 return false;
             int.TryParse(input, out numero);
@@ -35,14 +37,26 @@ namespace ClubeDaLeitura
                 RemoverAmigo();
             if (numero == 4)
                 VisualizarAmigo();
-
+            if (numero ==5)
+                QuitarMultas();
             Console.ReadLine();
             Console.Clear();
             return true;
         }
+        public void QuitarMultas()
+        {
+            Console.WriteLine("Digite a ID do Amigo Que Você Quer Quitar a Multa : ");
+            string input = Console.ReadLine();
+            int idAmigo;
+            int.TryParse(input, out idAmigo);
+            Amigo amigo = GetAmigo(idAmigo);
+            if (amigo.PossuiMultas())
+                return;
+            else
+                amigo.PagarMultas();
+        }
         public void AdicionarAmigo()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
             string nome, responsavel, telefone, endereco;
             string input;
 

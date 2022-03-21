@@ -10,9 +10,10 @@ namespace ClubeDaLeitura
     {
         AmigoMenu amigoMenu;
         CaixaMenu caixaMenu;
-        EmprestimoMenu emprestimoMenu;
         RevistaMenu revistaMenu;
-
+        EmprestimoMenu emprestimoMenu;
+        ReservaMenu reservaMenu;
+        CategoriaMenu categoriaMenu;
         //List<Emprestimo> emprestimos;
         //List<Amigo> amigos;
         //List<Caixa> caixas;
@@ -21,11 +22,12 @@ namespace ClubeDaLeitura
         public Gustavo(DateTime inicio)
         {
             this.inicio = inicio;
-
             amigoMenu = new AmigoMenu();
             caixaMenu = new CaixaMenu();
-            revistaMenu = new RevistaMenu(caixaMenu);
-            emprestimoMenu = new EmprestimoMenu(amigoMenu, revistaMenu, inicio);
+            categoriaMenu = new CategoriaMenu();
+            revistaMenu = new RevistaMenu(caixaMenu, categoriaMenu);
+            reservaMenu = new ReservaMenu(emprestimoMenu, amigoMenu, revistaMenu);
+            emprestimoMenu = new EmprestimoMenu(amigoMenu, revistaMenu, reservaMenu, inicio);
         }
         public void Menu()
         {
@@ -39,6 +41,8 @@ namespace ClubeDaLeitura
                 Console.WriteLine("Digite 2 - Para Gerenciar Emprestimo");
                 Console.WriteLine("Digite 3 - Para Gerenciar Caixa");
                 Console.WriteLine("Digite 4 - Para Gerenciar Revista");
+                Console.WriteLine("Digite 5 - Para Gerenciar Reserva");
+                Console.WriteLine("Digite 6 - Para Gerenciar Categoria");
                 Console.WriteLine("Digite quit - Para Sair");
                 opcao = Console.ReadLine();
                 if (opcao == "quit")
@@ -53,6 +57,10 @@ namespace ClubeDaLeitura
                     continuar = caixaMenu.Menu();
                 else if (menu == 4)
                     continuar = revistaMenu.Menu();
+                else if (menu == 5)
+                    continuar = reservaMenu.Menu();
+                else if (menu == 6)
+                    continuar = categoriaMenu.Menu();
                 menu = 0;
             }
         }

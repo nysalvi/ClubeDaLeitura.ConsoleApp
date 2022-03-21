@@ -9,16 +9,18 @@ namespace ClubeDaLeitura
     internal class EmprestimoMenu
     {
         public List<Emprestimo> emprestimos;
+        private ReservaMenu reservas;
         AmigoMenu amigos;
         RevistaMenu revistas;
         int id = 0;
         DateTime inicio;
-        public EmprestimoMenu(AmigoMenu amigos, RevistaMenu revistas, DateTime inicio)
+        public EmprestimoMenu(AmigoMenu amigos, RevistaMenu revistas, ReservaMenu reservas, DateTime inicio)
         {
             this.amigos = amigos;
             this.revistas = revistas;
             this.inicio = inicio;
-            this.emprestimos = new List<Emprestimo>();
+            this.reservas = reservas;
+            this.emprestimos = new List<Emprestimo>();  
         }
         public bool Menu(){
             string opcao;
@@ -32,6 +34,7 @@ namespace ClubeDaLeitura
             Console.WriteLine("\tDigite 6 - Para Verificar Os Emprestimos Em Aberto Em Um Dia");
             Console.WriteLine("\tDigite quit - Para Sair");
             opcao = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             if (opcao == "quit")
                 return false;
             int.TryParse(opcao, out numero);
@@ -53,11 +56,10 @@ namespace ClubeDaLeitura
         }
         public void AdicionarEmprestimo()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
             int idAmigo, idRevista;
             Amigo amigo = null;
             Revista revista = null;
-            DateTime emprestimo, devolucao;
+            DateTime emprestimo;
             string input;
 
             Console.WriteLine("Digite a ID do Amigo que fez o empréstimo : ");
@@ -65,16 +67,23 @@ namespace ClubeDaLeitura
                 int.TryParse(input, out idAmigo);
             Console.WriteLine("Digite a ID da revista emprestada : ");
                 input = Console.ReadLine();
-                int.TryParse(input, out idRevista);
+                int.TryParse(input, out idRevista);            
             Console.WriteLine("Digite a Data do Empréstimo : ");
                 input = Console.ReadLine();
                 DateTime.TryParse(input, out emprestimo);
-            Console.WriteLine("Digite a Data de Devolução : ");
-                input = Console.ReadLine();
-                DateTime.TryParse(input, out devolucao);
 
             revista = revistas.GetRevista(idRevista);
+            if (reservas.PossuiRevista(revista))
+            {
+                Reserva r = reservas.ProcuraReserva(idRevista);
+                if (r.ChecarValidez(emprestimo))
+                return;
+            }
             amigo = amigos.GetAmigo(idAmigo);
+            if (PossuiMultas(idAmigo, emprestimo))
+                return;
+            int devolver = revista.GetCategoria().GetDias();
+            DateTime devolucao = emprestimo.AddDays(devolver);
             id++;
             Emprestimo e = new Emprestimo(amigo, revista, emprestimo, devolucao, id);
             emprestimos.Add(e);
@@ -94,7 +103,6 @@ namespace ClubeDaLeitura
         }
         public void VerificaMes()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
             DateTime mes;
             Console.WriteLine("Digite o mês que deseja verificar : ");
             DateTime.TryParse(Console.ReadLine(), out mes);
@@ -125,7 +133,7 @@ namespace ClubeDaLeitura
             {
                 List<Emprestimo> empresta = new List<Emprestimo>();
                 emprestimos.ForEach(e => {
-                    if (e.GetEmprestimo() == dia && e.emAberto())
+                    if (e.GetEmprestimo() == dia && e.EmAberto())
                         empresta.Add(e);
                 });
                 empresta.ForEach(x => {
@@ -133,6 +141,17 @@ namespace ClubeDaLeitura
                         " | Data Empréstimo : {3} | Devolução : {4}", x.ToString());
                 });                
             }
+        }
+        public bool PossuiMultas(int idAmigo, DateTime emprestimo)
+        {
+            foreach (Emprestimo e in emprestimos)
+            {
+                if (e.GetAmigo().id == idAmigo){
+                    if (emprestimo > e.GetDevolucao())
+                        return true;
+                }
+            }
+            return false;
         }
     }
 }
